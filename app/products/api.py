@@ -19,4 +19,9 @@ class ProductView(MethodView):
                 return product.add_product(data)
             return jsonify({'message': validate_product(data)}), 406
         return jsonify({'message' : "You do not have admin rights"})
-    
+        decorators = [token_required]
+        
+    def get(self, current_user):
+        """Return all products."""
+        product = Product.get_all_products()
+        return product
