@@ -91,7 +91,15 @@ class TestBase(unittest.TestCase):
                                     content_type='application/json')
         data = json.loads(response.data.decode())
         return data['token']
-
+   
+        def create_valid_product(self):
+        """ Creates a valid product to be used for tests """
+        response = self.client.post('api/v2/products',
+                                    data=json.dumps(self.valid_product),
+                                    content_type='application/json',
+                                    headers={'Authorization':
+                                             self.get_admin_token()})
+                                             
     def tearDown(self):
         db = Database(app_config['TESTING'].DATABASE_URL)
         db.trancate_table("users")
