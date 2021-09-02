@@ -10,14 +10,14 @@ class Config(object):
 class DevelopmentConfiguration(Config):
     """Configurations for Development."""
     DEBUG = True
-    DATABASE_URL = ''
+    DATABASE_URL = 'postgresql://postgres:password@localhost:5432/datavizr_db'
     ENV= 'development'
 
 class TestingConfiguration(Config):
     """Configurations for Testing."""
     TESTING = True
     DEBUG = True
-    DATABASE_URL = ''
+    DATABASE_URL = 'postgresql://postgres:password@localhost:5432/datavizr_test_db'
     ENV = 'testing'
 
 class ProductionConfiguration(Config):
