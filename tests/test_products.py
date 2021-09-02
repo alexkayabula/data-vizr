@@ -73,3 +73,24 @@ class TestProduct(TestBase):
         self.create_valid_product()
         response = self.create_valid_product()
         self.assertEqual(response.status_code, 409)
+    
+    def test_get_product(self):
+        """ Tests fetching all product """
+        self.create_valid_product()
+        response = self.client.get('/api/v2/products',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessing_product_view_without_token(self):
+        """ Tests accessing the product endpoint without a token """
+        response = self.client.get('/api/v2/products')
+        self.assertEqual(response.status_code, 401)
+
+    def test_accessing_product_view_with_invalid_or_expired_token(self):
+        """ Tests accessing the product endpoint with an invalid
+        or expired token """
+        response = self.client.get('/api/v2/products',
+                                   headers={'Authorization':
+                                            'XBA5567SJ2K119'})
+        self.assertEqual(response.status_code, 401)
