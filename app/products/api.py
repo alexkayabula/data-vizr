@@ -25,3 +25,22 @@ class ProductView(MethodView):
         """Return all products."""
         product = Product.get_all_products()
         return product
+
+    decorators = [token_required]
+    def put(self, current_user, product_id):
+        """Update a product."""
+        product_db = ProductDbQueries()
+        data = request.get_json()
+        if current_user.username == 'admin':
+            query = product_db.fetch_by_parameter('products', 'product_id', product_id)
+            if query:
+                if validate_product(data) == "valid":
+                    product_name = data['product_name']
+                    price = data['price']
+                    category = data['category']
+                    product_db.update_product(product_name, price, category, product_id)
+                    updated_product = product_db.fetch_specific_product_by_parameter('products', 'product_id', product_id)
+                    return jsonify (updated_product)
+                return jsonify({'message': validate_product(data)}), 406
+            return jsonify ({'message' : "Product not found."})
+        return jsonify({'message' : "You do not have admin rights."})
