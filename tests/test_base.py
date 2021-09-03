@@ -91,7 +91,7 @@ class TestBase(unittest.TestCase):
                                     content_type='application/json')
         data = json.loads(response.data.decode())
         return data['token']
-   
+
     def create_valid_product(self):
         """ Creates a valid product to be used for tests """
         response = self.client.post('api/v2/products',
@@ -99,7 +99,7 @@ class TestBase(unittest.TestCase):
                                     content_type='application/json',
                                     headers={'Authorization':
                                              self.get_admin_token()})
-
+        return response
     def create_valid_order(self):
         """ Creates a valid order to be used for tests """
         response = self.client.post('api/v2/users/orders',
@@ -109,7 +109,15 @@ class TestBase(unittest.TestCase):
                                              self.get_admin_token()})
         return response
          
-                                             
+    def update_an_order(self):
+        """ Testing updating an order """
+        response = self.client.put('api/v2/orders/<int:orderId>',
+                                    data=json.dumps(self.valid_update),
+                                    content_type='application/json',
+                                    headers={'Authorization':
+                                             self.get_admin_token()})
+        return response
+
     def tearDown(self):
         db = Database(app_config['TESTING'].DATABASE_URL)
         db.trancate_table("users")
