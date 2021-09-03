@@ -1,0 +1,22 @@
+language: python
+
+python:
+  - "3.8"
+
+install:
+  - pip install -r requirements.txt
+  - pip install coverage
+  - pip install coveralls
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database datavizr_test_db;' -U postgres
+
+script:
+  - nosetests --with-coverage --cover-html --cover-package=app -v
+  - coverage report
+
+after_success:
+  - coveralls
