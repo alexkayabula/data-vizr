@@ -99,6 +99,16 @@ class TestBase(unittest.TestCase):
                                     content_type='application/json',
                                     headers={'Authorization':
                                              self.get_admin_token()})
+
+        def create_valid_order(self):
+        """ Creates a valid order to be used for tests """
+        response = self.client.post('api/v2/users/orders',
+                                    data=json.dumps(self.valid_order),
+                                    content_type='application/json',
+                                    headers={'Authorization':
+                                             self.get_admin_token()})
+        return response
+         
                                              
     def tearDown(self):
         db = Database(app_config['TESTING'].DATABASE_URL)
