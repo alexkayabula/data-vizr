@@ -42,3 +42,7 @@ class OrderDbQueries(Database):
                    }
             orders.append(row)
         return orders
+
+    def update_order_status(self, orderId, status):
+        query = "UPDATE orders SET status = '{}' WHERE orderId = {}".format(status, orderId)
+        self.cur.execute(query)
