@@ -14,3 +14,13 @@ class Order:
         self.quantity = quantity
         self.username = username
         self.status = status
+    
+    @classmethod
+    def get_orders(cls, username):
+        '''Retrieves a specific user's orders'''
+        order_db = OrderDbQueries()
+        orders = order_db.fetch_specific_order_by_parameter('orders', 'username', username)
+        for order in orders:
+            if order:
+                return jsonify(orders), 200
+        return jsonify({'message' : 'You have not made any orders'})

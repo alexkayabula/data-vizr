@@ -18,3 +18,14 @@ class OrderDbQueries(Database):
         VALUES('{}', '{}', '{}', '{}');".format(data['product_name'], data['quantity'], username, 'new')
         self.cur.execute(query)
         self.conn.commit()
+
+    def fetch_specific_order_by_parameter(self, table_name, column, param):
+        """Retrieve a single parameter from a specific table and column."""
+        query = "SELECT * FROM {} WHERE {} = '{}'".format(table_name, column, param)
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        orders = []
+        for row in rows:
+            row = {'orderId': row[0], 'product_name': row[1], 'quantity': row[2], 'username' : row[3], 'status' : row[4]}
+            orders.append(row)
+        return orders
