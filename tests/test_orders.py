@@ -50,9 +50,48 @@ class TestOrder(TestBase):
         self.assertEqual(response.status_code, 406)
         self.assertIn('Quantity should be an integer.', str(response.data))
 
+    def test_accessing_user_orders_history_without_token(self):
+        """ Tests a user accessing their order history without a token """
+        response = self.client.get('/api/v2/users/orders')
+        self.assertEqual(response.status_code, 401)
+        self.assertIn('Token is missing', str(response.data))
+
+    def test_admin_accessing_all_user_orders_without_token(self):
+        """ Tests Admin accessing all orders without a token """
+        response = self.client.get('/api/v2/users/orders')
+        self.assertEqual(response.status_code, 401)
+        self.assertIn('Token is missing', str(response.data))
+
+
+    def test_admin_accessing_a_specific_order_without_token(self):
+        """ Tests Admin accessing a specific order without a token """
+        response = self.client.get('/api/v2/orders/<int:orderId>')
+        self.assertEqual(response.status_code, 404)
+        self.assertIn(
+            'Resource not found, Check the url and try again', str(response.data))
+
+    def test_accessing_orders_with_invalid_or_expired_token(self):
+        """ Tests accessing the orders endpoint with an invalid
+        or expired token."""
+        response = self.client.get('/api/v2/orders/',
+                                   headers={'Authorization':
+                                            'XBA5567SJ2K119'})
+        self.assertEqual(response.status_code, 401)
+        self.assertIn('Token is invalid', str(response.data))
+
+
+
     def test_get_all_orders(self):
         """ Tests a users getting all their orders. """
         response = self.client.get('/api/v2/users/orders',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_get_all_orders(self):
+        """ Tests admin getting all orders. """
+        self.create_valid_order()
+        response = self.client.get('/api/v2/orders/',
                                    headers={'Authorization':
                                             self.get_admin_token()})
         self.assertEqual(response.status_code, 200)
@@ -65,6 +104,7 @@ class TestOrder(TestBase):
                                    headers={'Authorization':
                                             self.get_admin_token()})
         self.assertEqual(response.status_code, 200)
+
 
     def test_non_admin_getting_an_order(self):
         """ Tests non admin getting an order. """
@@ -80,3 +120,20 @@ class TestOrder(TestBase):
                                             self.get_non_admin_token()})
         self.assertIn('You do not have admin rights.', str(response.data))
         self.assertEqual(response.status_code, 200)
+
+
+    def test_admin_getting_non_existant_order(self):
+        """ Tests admin getting a non_existant order. """
+        response = self.client.post('/api/v2/auth/signup',
+                                    data=json.dumps(self.valid_admin_user),
+                                    content_type='application/json')
+        response = self.client.get('/api/v2/orders/1',
+                                   data=json.dumps(self.valid_order),
+                                   content_type='application/json',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertIn('Order not found.', str(response.data))
+        self.assertEqual(response.status_code, 404)
+
+
+
