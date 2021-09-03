@@ -138,7 +138,7 @@ class TestOrder(TestBase):
 
 
 
-     def test_admin_updating_specific_orders(self):
+    def test_admin_updating_specific_orders(self):
         """ Tests admin updating a specific order. """
         self.create_valid_product()
         self.create_valid_order()

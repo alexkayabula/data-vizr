@@ -92,7 +92,7 @@ class TestBase(unittest.TestCase):
         data = json.loads(response.data.decode())
         return data['token']
    
-        def create_valid_product(self):
+    def create_valid_product(self):
         """ Creates a valid product to be used for tests """
         response = self.client.post('api/v2/products',
                                     data=json.dumps(self.valid_product),
@@ -100,7 +100,7 @@ class TestBase(unittest.TestCase):
                                     headers={'Authorization':
                                              self.get_admin_token()})
 
-        def create_valid_order(self):
+    def create_valid_order(self):
         """ Creates a valid order to be used for tests """
         response = self.client.post('api/v2/users/orders',
                                     data=json.dumps(self.valid_order),
