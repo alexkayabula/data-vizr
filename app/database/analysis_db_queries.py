@@ -25,3 +25,23 @@ class AnalysisDbQueries(OrderDbQueries, ProductDbQueries):
             data = {product['product_name']: product['price']}
             price_per_product_data.append(data)
         return price_per_product_data
+    
+    def fetch_number_of_orders_per_product(self):
+        """Retrieve number of orders per product from the database."""
+        orders = OrderDbQueries().fetch_all_orders()
+        orders_per_product = []
+        keys = set()
+        for order in orders:
+            product_name = order['product_name']
+            number_of_orders = order['quantity']
+            data = {product_name: number_of_orders}
+            if product_name not in keys:
+                keys.add(product_name)
+                orders_per_product.append(data)
+            else:
+                for data in orders_per_product:
+                    for key, value in data.items():
+                        if key == product_name:
+                            number_of_orders = int (value) + int(number_of_orders)
+                            data.update({product_name : number_of_orders})
+        return orders_per_product
