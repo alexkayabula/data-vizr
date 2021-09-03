@@ -1,4 +1,3 @@
-maintainability
 """creates a token required decorator helps in securing endpoints"""
 from functools import wraps
 from flask import request, jsonify, current_app as app
