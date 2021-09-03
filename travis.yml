@@ -1,22 +1,15 @@
 language: python
-
 python:
   - "3.8"
-
 install:
   - pip install -r requirements.txt
-  - pip install coverage
-  - pip install coveralls
-
 services:
   - postgresql
-
 before_script:
   - psql -c 'create database datavizr_test_db;' -U postgres
-
 script:
-  - nosetests --with-coverage --cover-html --cover-package=app -v
-  - coverage report
-
+  - export FLASK_ENV=testing
+  - python3 -m unittest discover tests
+  - coverage run -m unittest discover tests
 after_success:
   - coveralls
