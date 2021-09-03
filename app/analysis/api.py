@@ -24,3 +24,13 @@ class OrdersPerProductView(MethodView):
             number_of_orders_per_product_dataset = Analysis.get_all_number_of_orders_per_product()
             return number_of_orders_per_product_dataset
         return jsonify({'message' : "You do not have admin rights."})
+
+class OrdersPerUserView(MethodView):
+
+    decorators = [token_required]
+    def get(self, current_user):
+        """Return number of orders per user dataset."""
+        if current_user.username == "admin":
+            number_of_orders_per_user_dataset = Analysis.get_all_number_of_orders_per_user()
+            return number_of_orders_per_user_dataset
+        return jsonify({'message' : "You do not have admin rights."})

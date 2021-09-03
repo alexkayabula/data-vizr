@@ -45,3 +45,23 @@ class AnalysisDbQueries(OrderDbQueries, ProductDbQueries):
                             number_of_orders = int (value) + int(number_of_orders)
                             data.update({product_name : number_of_orders})
         return orders_per_product
+
+    def fetch_number_of_orders_per_user(self):
+        """Retrieve number of orders per user from the database."""
+        orders = OrderDbQueries().fetch_all_orders()
+        orders_per_user = []
+        keys = set()
+        for order in orders:
+            username = order['username']
+            number_of_orders = 1
+            data = {username: number_of_orders}
+            if username not in keys:
+                keys.add(username)
+                orders_per_user.append(data)
+            else:
+                for data in orders_per_user:
+                    for key, value in data.items():
+                        if key == username:
+                            number_of_orders = int (value) + int(number_of_orders)
+                            data.update({username : number_of_orders})
+        return orders_per_user
