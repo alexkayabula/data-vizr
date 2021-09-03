@@ -134,6 +134,63 @@ class TestOrder(TestBase):
                                             self.get_admin_token()})
         self.assertIn('Order not found.', str(response.data))
         self.assertEqual(response.status_code, 404)
+    
+
+
+
+     def test_admin_updating_specific_orders(self):
+        """ Tests admin updating a specific order. """
+        self.create_valid_product()
+        self.create_valid_order()
+        response = self.client.put('/api/v2/orders/1',
+                                   data=json.dumps(self.valid_update),
+                                   content_type='application/json',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
+
+
+
+    def test_admin_updating_non_existing_order(self):
+        """ Tests admin updating a non existing order."""
+        self.create_valid_product()
+        self.create_valid_order()
+        response = self.client.put('/api/v2/orders/6',
+                                   data=json.dumps(self.valid_update),
+                                   content_type='application/json',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Order not found.', str(response.data))
+
+    def test_admin_updating_order_with_invalid_status(self):
+        """ Tests admin updating a specific order with invalid status. """
+        self.create_valid_product()
+        self.create_valid_order()
+        response = self.client.put('/api/v2/orders/1',
+                                   data=json.dumps(self.invalid_update),
+                                   content_type='application/json',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Invalid Status.', str(response.data))
+
+    def test_non_admin_updating_order(self):
+        """ Tests non admin updating an order. """
+        response = self.client.post('/api/v2/auth/signup',
+                                    data=json.dumps(self.valid_non_admin_user),
+                                    content_type='application/json')
+        self.create_valid_product()
+        self.create_valid_order()
+        response = self.client.put('/api/v2/orders/1',
+                                   data=json.dumps(self.valid_order),
+                                   content_type='application/json',
+                                   headers={'Authorization':
+                                            self.get_non_admin_token()})
+        self.assertIn('You do not have admin rights.', str(response.data))
+        self.assertEqual(response.status_code, 200)
+
+   
 
 
 

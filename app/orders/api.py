@@ -51,3 +51,22 @@ class OrdersManagementView(MethodView):
             all_orders = Order.get_all_orders()
             return all_orders
         return jsonify({'message' : "You do not have admin rights."})
+    
+    decorators = [token_required]
+    def put(self, current_user, orderId):
+        """Update an order."""
+        order_db = OrderDbQueries()
+        data = request.get_json()
+        if current_user.username == 'admin':
+            query = order_db.fetch_by_parameter('orders', 'orderId', orderId)
+            if query:
+                order_status = ['completed', 'cancelled', 'processing', 'new']
+                status = data['status']
+                if status in  order_status:
+                    order_db.update_order_status(orderId, status)
+                    updated_order = order_db.fetch_specific_order_by_parameter('orders', 'orderId', orderId)
+                    return jsonify ({'message' : updated_order})
+                return jsonify ({'message' : 'Invalid Status.'})
+            return jsonify ({'message' : "Order not found."})
+        return jsonify({'message' : "You do not have admin rights."})
+        
