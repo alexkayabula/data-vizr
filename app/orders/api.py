@@ -29,13 +29,15 @@ class OrderView(MethodView):
                     return make_response(jsonify(response)), 201
             return jsonify({'message': 'Product not found.'})
         return jsonify({'message': validate_order(data)}), 406
-
-        def get(self, current_user):
-            """Return single user orders."""
-            username = current_user.username
-            orders = Order.get_orders(username)
-            return orders
         
+    decorators = [token_required]
+    def get(self, current_user):
+        """Return single user orders."""
+        username = current_user.username
+        orders = Order.get_orders(username)
+        return orders
+        
+    
 class OrdersManagementView(MethodView):
 
     decorators = [token_required]

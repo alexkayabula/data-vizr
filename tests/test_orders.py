@@ -79,8 +79,6 @@ class TestOrder(TestBase):
         self.assertEqual(response.status_code, 401)
         self.assertIn('Token is invalid', str(response.data))
 
-
-
     def test_get_all_orders(self):
         """ Tests a users getting all their orders. """
         response = self.client.get('/api/v2/users/orders',
@@ -134,9 +132,6 @@ class TestOrder(TestBase):
                                             self.get_admin_token()})
         self.assertIn('Order not found.', str(response.data))
         self.assertEqual(response.status_code, 404)
-    
-
-
 
     def test_admin_updating_specific_orders(self):
         """ Tests admin updating a specific order. """
@@ -189,4 +184,3 @@ class TestOrder(TestBase):
                                             self.get_non_admin_token()})
         self.assertIn('You do not have admin rights.', str(response.data))
         self.assertEqual(response.status_code, 200)
-
