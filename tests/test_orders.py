@@ -56,3 +56,27 @@ class TestOrder(TestBase):
                                    headers={'Authorization':
                                             self.get_admin_token()})
         self.assertEqual(response.status_code, 200)
+
+    def test_admin_get_specific_orders(self):
+        """ Tests admin getting a specific order.  """
+        self.create_valid_product()
+        self.create_valid_order()
+        response = self.client.get('/api/v2/orders/1',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
+
+    def test_non_admin_getting_an_order(self):
+        """ Tests non admin getting an order. """
+        response = self.client.post('/api/v2/auth/signup',
+                                    data=json.dumps(self.valid_non_admin_user),
+                                    content_type='application/json')
+        self.create_valid_product()
+        self.create_valid_order()
+        response = self.client.get('/api/v2/orders/1',
+                                   data=json.dumps(self.valid_order),
+                                   content_type='application/json',
+                                   headers={'Authorization':
+                                            self.get_non_admin_token()})
+        self.assertIn('You do not have admin rights.', str(response.data))
+        self.assertEqual(response.status_code, 200)

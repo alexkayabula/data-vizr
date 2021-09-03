@@ -24,3 +24,14 @@ class Order:
             if order:
                 return jsonify(orders), 200
         return jsonify({'message' : 'You have not made any orders'})
+
+    @classmethod
+    def get_all_orders(cls):
+        '''Retrieves all orders.'''
+        order_db = OrderDbQueries()
+        orders = order_db.fetch_all_orders()
+        if orders == []:
+            return jsonify(
+                {"message": " There are no orders at the moment."}), 200
+        return jsonify(orders), 200
+

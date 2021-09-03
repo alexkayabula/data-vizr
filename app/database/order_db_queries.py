@@ -29,3 +29,16 @@ class OrderDbQueries(Database):
             row = {'orderId': row[0], 'product_name': row[1], 'quantity': row[2], 'username' : row[3], 'status' : row[4]}
             orders.append(row)
         return orders
+        
+    def fetch_all_orders(self):
+        """Retrieve all order records from the database."""
+        self.cur.execute("SELECT * FROM orders ")
+        rows = self.cur.fetchall()
+        orders = []
+        for row in rows:
+            row = {'orderId': row[0], 'product_name': row[1],
+                   'quantity': row[2],
+                    "username": row[3], 'status': row[4],
+                   }
+            orders.append(row)
+        return orders
