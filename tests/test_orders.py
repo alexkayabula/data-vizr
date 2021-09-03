@@ -49,3 +49,10 @@ class TestOrder(TestBase):
                                              self.get_admin_token()})
         self.assertEqual(response.status_code, 406)
         self.assertIn('Quantity should be an integer.', str(response.data))
+
+    def test_get_all_orders(self):
+        """ Tests a users getting all their orders. """
+        response = self.client.get('/api/v2/users/orders',
+                                   headers={'Authorization':
+                                            self.get_admin_token()})
+        self.assertEqual(response.status_code, 200)
