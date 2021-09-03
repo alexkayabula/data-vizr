@@ -190,7 +190,3 @@ class TestOrder(TestBase):
         self.assertIn('You do not have admin rights.', str(response.data))
         self.assertEqual(response.status_code, 200)
 
-   
-
-
-
