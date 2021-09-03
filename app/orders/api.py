@@ -36,3 +36,18 @@ class OrderView(MethodView):
             orders = Order.get_orders(username)
             return orders
         
+class OrdersManagementView(MethodView):
+
+    decorators = [token_required]
+    def get(self, current_user, orderId):
+        """Return all orders."""
+        order_db = OrderDbQueries()
+        if current_user.username == 'admin':
+            if orderId:
+                query = order_db.fetch_specific_order_by_parameter('orders', 'orderId', orderId)
+                for order in query:
+                    return jsonify({"orders" : order}), 200
+                return jsonify({'message': "Order not found."}), 404
+            all_orders = Order.get_all_orders()
+            return all_orders
+        return jsonify({'message' : "You do not have admin rights."})
