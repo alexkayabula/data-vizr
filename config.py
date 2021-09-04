@@ -10,20 +10,20 @@ class Config(object):
 class DevelopmentConfiguration(Config):
     """Configurations for Development."""
     DEBUG = True
-    DATABASE_URL = 'postgresql://postgres:password@localhost:5432/datavizr_db'
+    DATABASE_URL = os.environ.get('DEV_DATABASE_URL')
     ENV= 'development'
 
 class TestingConfiguration(Config):
     """Configurations for Testing."""
     TESTING = True
     DEBUG = True
-    DATABASE_URL = 'postgresql://postgres:password@localhost:5432/datavizr_test_db'
+    DATABASE_URL = os.environ.get('TEST_DATABASE_URL')
     ENV = 'testing'
 
 class ProductionConfiguration(Config):
     """Configurations for Production."""
     DEBUG = False
-    DATABASE_URL = ''
+    DATABASE_URL = os.environ.get('DATABASE_URL')
     ENV = 'production'
     
 
