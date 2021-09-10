@@ -38,7 +38,7 @@ In the terminal:>
 - Install requirements: `pip3 install -r requirements`
 - Install databases: `psql`; `CREATE DATABASE [YOUR_DB_NAME];`; `CREATE DATABASE [YOUR_TEST_DB_NAME];`
 - Run application: `python3 run.py`
-- In the browser, access the app at: `http:localhost:5000`
+- In postman, access the API at: `http:localhost:5000/signup`
 
 ### Unit Tests.
 
