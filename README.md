@@ -37,6 +37,7 @@ In the terminal:>
 - Source virtual environment: `source .env/bin/activate`
 - Install requirements: `pip3 install -r requirements`
 - Install databases: `psql`; `CREATE DATABASE [YOUR_DB_NAME];`; `CREATE DATABASE [YOUR_TEST_DB_NAME];`
+- Set the created databases in the `config.py` file or in the local environment.
 - Run application: `python3 run.py`
 - In postman, access the API at: `http:localhost:5000/signup`
 
